@@ -13,10 +13,12 @@ var (
 	threadurl  = ""
 )
 
+// Thread is a container for posts
 type Thread struct {
 	Number int `json:"no"`
 }
 
+// Page is a container for threads
 type Page struct {
 	Page    int      `json:"page"`
 	Threads []Thread `json:"threads"`
@@ -49,12 +51,16 @@ func getThreadNumbers() []int {
 	return output
 }
 
-func buildThreadUrl(number int) string {
+func buildThreadURL(number int) string {
 	return threadurl + string(number)
+}
+
+func getWebmPosts(url string) []string {
+
 }
 
 func main() {
 	for _, threads := range getThreadNumbers() {
-		fmt.Println(buildThreadUrl(threads))
+		fmt.Println(buildThreadURL(threads))
 	}
 }
