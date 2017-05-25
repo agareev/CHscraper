@@ -1,16 +1,11 @@
 package main
 
-import (
-	"encoding/json"
-	"fmt"
-	"io/ioutil"
-	"log"
-	"net/http"
-)
+import "log"
 
 var (
 	catalogurl = ""
 	threadurl  = ""
+	fileurl    = ""
 )
 
 // Thread is a container for posts
@@ -24,43 +19,26 @@ type Page struct {
 	Threads []Thread `json:"threads"`
 }
 
+// Posts is a container for messages or/and files
+type Posts struct {
+	Post []struct {
+		Number   int    `json:"no"`
+		Filename string `json:"filename"`
+		Ext      string `json:"ext"`
+		Tim      int    `json:"tim"`
+	} `json:"posts"`
+}
+
 func init() {
-	fmt.Println("asd")
-}
-
-func getThreadNumbers() []int {
-	var processing []Page
-	var output []int
-	client := &http.Client{}
-	req, _ := http.NewRequest("GET", catalogurl, nil)
-	resp, err := client.Do(req)
-	if err != nil {
-		log.Fatal("couldn't connect ", err)
-	}
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		log.Fatal("couldn't read ", err)
-	}
-	json.Unmarshal(body, &processing)
-	for _, page := range processing {
-		for _, thread := range page.Threads {
-			output = append(output, thread.Number)
-		}
-	}
-	return output
-}
-
-func buildThreadURL(number int) string {
-	return threadurl + string(number)
-}
-
-func getWebmPosts(url string) []string {
-
+	log.Println("Start downloading")
 }
 
 func main() {
-	for _, threads := range getThreadNumbers() {
-		fmt.Println(buildThreadURL(threads))
+	for _, threadNUM := range getThreadNumbers() {
+		Dthreadurl := buildThreadURL(threadNUM)
+		for _, downloadURL := range getPosts(Dthreadurl) {
+			log.Println(buldFileURL(downloadURL))
+		}
 	}
+
 }
