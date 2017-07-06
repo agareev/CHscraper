@@ -1,11 +1,10 @@
 package main
 
-import "log"
-
 var (
-	catalogurl = ""
-	threadurl  = ""
-	fileurl    = ""
+	catalogurl = "https://a.4cdn.org/gif/catalog.json"
+	threadurl  = "https://a.4cdn.org/gif/thread/"
+	fileurl    = "https://i.4cdn.org/gif/"
+	thumburl   = "https://t.4cdn.org/gif/"
 )
 
 // Thread is a container for posts
@@ -19,26 +18,29 @@ type Page struct {
 	Threads []Thread `json:"threads"`
 }
 
-// Posts is a container for messages or/and files
+// Post is a container for messages or/and files
+type Post struct {
+	Number   int    `json:"no"`
+	Filename string `json:"filename"`
+	Ext      string `json:"ext"`
+	Tim      int    `json:"tim"`
+	Md5      string `json:"md5"`
+}
+
+// Posts is a container for post
 type Posts struct {
-	Post []struct {
-		Number   int    `json:"no"`
-		Filename string `json:"filename"`
-		Ext      string `json:"ext"`
-		Tim      int    `json:"tim"`
-	} `json:"posts"`
+	Post []Post `json:"posts"`
 }
 
 func init() {
-	log.Println("Start downloading")
+	// log.Println("Start downloading")
 }
 
 func main() {
 	for _, threadNUM := range getThreadNumbers() {
 		Dthreadurl := buildThreadURL(threadNUM)
-		for _, downloadURL := range getPosts(Dthreadurl) {
-			log.Println(buldFileURL(downloadURL))
+		for downloadURL, hash := range getPosts(Dthreadurl) {
+			saveFile(buldFileURL(downloadURL), hash)
 		}
 	}
-
 }

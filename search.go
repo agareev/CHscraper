@@ -39,6 +39,10 @@ func buldFileURL(number int) string {
 	return fileurl + strconv.Itoa(number) + ".webm"
 }
 
+func buildThumbURL(number int) string {
+	return thumburl + strconv.Itoa(number) + "s.jpg"
+}
+
 func hasFile(number int) bool {
 	if number == 0 {
 		return false
@@ -46,9 +50,9 @@ func hasFile(number int) bool {
 	return true
 }
 
-func getPosts(url string) []int {
+func getPosts(url string) map[int]string { //[]int, md5 string {
 	var processing Posts
-	var output []int
+	output := make(map[int]string)
 	client := &http.Client{}
 	req, _ := http.NewRequest("GET", url, nil)
 	resp, err := client.Do(req)
@@ -63,7 +67,7 @@ func getPosts(url string) []int {
 	json.Unmarshal(body, &processing)
 	for _, post := range processing.Post {
 		if hasFile(post.Tim) {
-			output = append(output, post.Tim)
+			output[post.Tim] = post.Md5
 		}
 	}
 	return output
