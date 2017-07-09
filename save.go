@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"os"
+	"path/filepath"
 	"time"
 )
 
@@ -17,18 +18,20 @@ func saveFile(name int, hash string) {
 
 	if checkUniq(hash) {
 		createFolder()
-		log.Println(buldFileURL(name), hash, " downloaded!")
+		log.Println(buldFileURL(name), buildThumbURL(name), hash, "downloaded!")
 		return
 	}
 
 }
 
 func createFolder() string {
-	t := time.Now()
-	path := "files/" + t.Format("2006-01-02") + "/"
-	if _, err := os.Stat(path); os.IsNotExist(err) {
+	t := time.Now().Format("2006-01-02")
+	path := "files/" + t + "/"
+	path, err := filepath.Abs(path)
+	// if e
+	if _, err = os.Stat(path); os.IsNotExist(err) {
 		os.Mkdir(path, 0755)
-		t = t.Add(-24 * time.Hour)
+		log.Println(path, "created!")
 	}
 	return path
 }

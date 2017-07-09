@@ -1,53 +1,36 @@
 package main
 
+import (
+	"database/sql"
+	"flag"
+	"log"
+
+	_ "github.com/go-sql-driver/mysql"
+)
+
 var (
 	catalogurl = "https://a.4cdn.org/gif/catalog.json"
 	threadurl  = "https://a.4cdn.org/gif/thread/"
 	fileurl    = "https://i.4cdn.org/gif/"
 	thumburl   = "https://t.4cdn.org/gif/"
+	datasource = "root:root@tcp(127.0.0.1:3306)/database"
+	db         *sql.DB
 )
 
-// Thread is a container for posts
-type Thread struct {
-	Number int `json:"no"`
-}
-
-// Page is a container for threads
-type Page struct {
-	Page    int      `json:"page"`
-	Threads []Thread `json:"threads"`
-}
-
-// Post is a container for messages or/and files
-type Post struct {
-	Number   int    `json:"no"`
-	Filename string `json:"filename"`
-	Ext      string `json:"ext"`
-	Tim      int    `json:"tim"`
-	Md5      string `json:"md5"`
-}
-
-// Posts is a container for post
-type Posts struct {
-	Post []Post `json:"posts"`
-}
-
-// PreparedFile is ready for download file
-type PreparedFile struct {
-	Name int
-	// URL  string
-	Hash string
-}
-
 func init() {
-	// log.Println("Start downloading")
+	log.Println("Start downloading")
+	flag.StringVar(&datasource, "c", datasource, "connect")
+	flag.Parse()
 }
 
 func main() {
+	db, err := sql.Open("mysql", datasource)
 	for _, threadNUM := range getThreadNumbers() {
 		Dthreadurl := buildThreadURL(threadNUM)
 		for _, i := range getPosts(Dthreadurl) {
 			saveFile(i.Name, i.Hash)
 		}
 	}
+	log.Println(err)
+	defer db.Close()
 }
