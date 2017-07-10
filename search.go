@@ -35,12 +35,12 @@ func buildThreadURL(number int) string {
 	return threadurl + strconv.Itoa(number) + ".json"
 }
 
-func buldFileURL(number int) string {
-	return fileurl + strconv.Itoa(number) + ".webm"
+func (f *MetaFile) bildurl() string {
+	return fileurl + strconv.Itoa(f.Name) + ".json"
 }
 
-func buildThumbURL(number int) string {
-	return thumburl + strconv.Itoa(number) + "s.jpg"
+func (f *MetaFile) buildthumb() string {
+	return thumburl + strconv.Itoa(f.Name) + "s.jpg"
 }
 
 func hasFile(number int) bool {
@@ -50,10 +50,10 @@ func hasFile(number int) bool {
 	return true
 }
 
-func getPosts(url string) []PreparedFile { //[]int, md5 string {
+func getPosts(url string) []MetaFile { //[]int, md5 string {
 	var processing Posts
 	// output := make(map[int]string)
-	var output []PreparedFile
+	var output []MetaFile
 	client := &http.Client{}
 	req, _ := http.NewRequest("GET", url, nil)
 	resp, err := client.Do(req)
@@ -68,7 +68,7 @@ func getPosts(url string) []PreparedFile { //[]int, md5 string {
 	json.Unmarshal(body, &processing)
 	for _, post := range processing.Post {
 		if hasFile(post.Tim) {
-			fileToPrepare := PreparedFile{post.Tim, post.Md5}
+			fileToPrepare := MetaFile{post.Tim, post.Md5}
 			output = append(output, fileToPrepare)
 			// output[post.Tim] = post.Md5
 		}

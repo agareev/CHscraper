@@ -14,7 +14,8 @@ var (
 	fileurl    = "https://i.4cdn.org/gif/"
 	thumburl   = "https://t.4cdn.org/gif/"
 	datasource = "root:root@tcp(127.0.0.1:3306)/database"
-	db         *sql.DB
+	// DB is a database connector
+	DB *sql.DB
 )
 
 func init() {
@@ -24,13 +25,14 @@ func init() {
 }
 
 func main() {
-	db, err := sql.Open("mysql", datasource)
+	log.Println(datasource)
+	DB, err := sql.Open("mysql", datasource)
 	for _, threadNUM := range getThreadNumbers() {
 		Dthreadurl := buildThreadURL(threadNUM)
 		for _, i := range getPosts(Dthreadurl) {
-			saveFile(i.Name, i.Hash)
+			i.saveFile()
 		}
 	}
 	log.Println(err)
-	defer db.Close()
+	defer DB.Close()
 }

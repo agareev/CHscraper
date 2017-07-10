@@ -2,12 +2,12 @@ package main
 
 import "log"
 
-func checkUniq(md5 string) bool {
-	rows, err := db.Query("select md5 from meta_webms count 1 where md5=?", md5)
+func (f *MetaFile) checkUniq() bool {
+	_, err := DB.Query("select * from meta_webms where md5=? LIMIT 1;", f.Hash)
 	if err != nil {
 		log.Println(err, "checked!")
 		return true
 	}
-	log.Println(rows, "wqr")
+	log.Println("wqr")
 	return false
 }

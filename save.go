@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func saveFile(name int, hash string) {
+func (f *MetaFile) saveFile() {
 	// 	out, err := os.Create("output.txt")
 	// defer out.Close()
 	// ...
@@ -16,9 +16,9 @@ func saveFile(name int, hash string) {
 	// ...
 	// n, err := io.Copy(out, resp.Body)
 
-	if checkUniq(hash) {
+	if f.checkUniq() {
 		createFolder()
-		log.Println(buldFileURL(name), buildThumbURL(name), hash, "downloaded!")
+		log.Println(f.bildurl(), f.buildthumb(), f.Hash, "downloaded!")
 		return
 	}
 
@@ -34,4 +34,8 @@ func createFolder() string {
 		log.Println(path, "created!")
 	}
 	return path
+}
+
+func downloadMeta(post Posts) error {
+	return nil
 }

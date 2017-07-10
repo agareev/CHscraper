@@ -25,9 +25,8 @@ type Posts struct {
 	Post []Post `json:"posts"`
 }
 
-// PreparedFile is ready for download file
-type PreparedFile struct {
+// MetaFile is ready for download file
+type MetaFile struct {
 	Name int
-	// URL  string
 	Hash string
 }
