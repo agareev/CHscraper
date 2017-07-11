@@ -22,17 +22,24 @@ func init() {
 	log.Println("Start downloading")
 	flag.StringVar(&datasource, "c", datasource, "connect")
 	flag.Parse()
+	var err error
+	DB, err = sql.Open("mysql", datasource)
+	if err != nil {
+		log.Fatal(err)
+	}
+	if err = DB.Ping(); err != nil {
+		log.Fatal(err)
+	}
 }
 
 func main() {
 	log.Println(datasource)
-	DB, err := sql.Open("mysql", datasource)
+
 	for _, threadNUM := range getThreadNumbers() {
 		Dthreadurl := buildThreadURL(threadNUM)
 		for _, i := range getPosts(Dthreadurl) {
 			i.saveFile()
 		}
 	}
-	log.Println(err)
 	defer DB.Close()
 }

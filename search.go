@@ -36,7 +36,7 @@ func buildThreadURL(number int) string {
 }
 
 func (f *MetaFile) bildurl() string {
-	return fileurl + strconv.Itoa(f.Name) + ".json"
+	return fileurl + strconv.Itoa(f.Name) + ".webm"
 }
 
 func (f *MetaFile) buildthumb() string {

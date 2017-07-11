@@ -8,6 +8,13 @@ import (
 )
 
 func (f *MetaFile) saveFile() {
+
+	if f.checkUniq() {
+		createFolder()
+		log.Println(f.bildurl(), f.buildthumb(), f.Hash, "downloaded!")
+		return
+	}
+
 	// 	out, err := os.Create("output.txt")
 	// defer out.Close()
 	// ...
@@ -15,12 +22,6 @@ func (f *MetaFile) saveFile() {
 	// defer resp.Body.Close()
 	// ...
 	// n, err := io.Copy(out, resp.Body)
-
-	if f.checkUniq() {
-		createFolder()
-		log.Println(f.bildurl(), f.buildthumb(), f.Hash, "downloaded!")
-		return
-	}
 
 }
 
