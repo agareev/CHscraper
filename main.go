@@ -32,6 +32,13 @@ type Posts struct {
 	Post []Post `json:"posts"`
 }
 
+// PreparedFile is ready for download file
+type PreparedFile struct {
+	Name int
+	// URL  string
+	Hash string
+}
+
 func init() {
 	// log.Println("Start downloading")
 }
@@ -39,8 +46,8 @@ func init() {
 func main() {
 	for _, threadNUM := range getThreadNumbers() {
 		Dthreadurl := buildThreadURL(threadNUM)
-		for downloadURL, hash := range getPosts(Dthreadurl) {
-			saveFile(buldFileURL(downloadURL), hash)
+		for _, i := range getPosts(Dthreadurl) {
+			saveFile(i.Name, i.Hash)
 		}
 	}
 }
