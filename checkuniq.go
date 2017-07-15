@@ -1,14 +1,23 @@
 package main
 
-import "log"
+import (
+	"database/sql"
+	"log"
+)
 
 func (f *MetaFile) checkUniq() bool {
-	rows, err := DB.Query("select * from meta_webms where md5=? LIMIT 1;", f.Hash)
-	if err != nil {
-		log.Println(err, "checked!")
-		return false
+	var id int64
+	err := DB.QueryRow("select id from meta_webms where md5=?", f.Hash).Scan(&id)
+	switch {
+	case err == sql.ErrNoRows:
+		// log.Println(f.Hash, " is uniq")
+		return true
+	case err != nil:
+		log.Fatal(err)
+	default:
+		log.Println(id, " is not iniq")
 	}
-	defer rows.Close()
+
 	// update row popularity
 	return true
 }

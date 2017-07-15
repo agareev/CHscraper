@@ -50,9 +50,8 @@ func hasFile(number int) bool {
 	return true
 }
 
-func getPosts(url string) []MetaFile { //[]int, md5 string {
+func getPosts(url string) []MetaFile {
 	var processing Posts
-	// output := make(map[int]string)
 	var output []MetaFile
 	client := &http.Client{}
 	req, _ := http.NewRequest("GET", url, nil)
@@ -68,9 +67,8 @@ func getPosts(url string) []MetaFile { //[]int, md5 string {
 	json.Unmarshal(body, &processing)
 	for _, post := range processing.Post {
 		if hasFile(post.Tim) {
-			fileToPrepare := MetaFile{post.Tim, post.Md5}
+			fileToPrepare := MetaFile{post.Tim, post.Md5, 0}
 			output = append(output, fileToPrepare)
-			// output[post.Tim] = post.Md5
 		}
 	}
 	return output

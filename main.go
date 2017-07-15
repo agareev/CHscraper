@@ -38,7 +38,10 @@ func main() {
 	for _, threadNUM := range getThreadNumbers() {
 		Dthreadurl := buildThreadURL(threadNUM)
 		for _, i := range getPosts(Dthreadurl) {
-			i.saveFile()
+			if i.checkUniq() {
+				i.saveFile()
+				i.saveMeta()
+			}
 		}
 	}
 	defer DB.Close()

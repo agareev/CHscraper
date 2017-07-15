@@ -27,6 +27,7 @@ type Posts struct {
 
 // MetaFile is ready for download file
 type MetaFile struct {
-	Name int
-	Hash string
+	Name  int
+	Hash  string
+	DayID int64
 }
