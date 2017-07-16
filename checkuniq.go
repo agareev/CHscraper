@@ -16,8 +16,9 @@ func (f *MetaFile) checkUniq() bool {
 		log.Fatal(err)
 	default:
 		log.Println(id, " is not iniq")
+		return false
 	}
 
 	// update row popularity
-	return true
+	return false
 }

@@ -43,11 +43,11 @@ func (f *MetaFile) buildthumb() string {
 	return thumburl + strconv.Itoa(f.Name) + "s.jpg"
 }
 
-func hasFile(number int) bool {
-	if number == 0 {
-		return false
+func hasFile(number int, ext string) bool {
+	if number != 0 && ext == ".webm" {
+		return true
 	}
-	return true
+	return false
 }
 
 func getPosts(url string) []MetaFile {
@@ -66,7 +66,7 @@ func getPosts(url string) []MetaFile {
 	}
 	json.Unmarshal(body, &processing)
 	for _, post := range processing.Post {
-		if hasFile(post.Tim) {
+		if hasFile(post.Tim, post.Ext) {
 			fileToPrepare := MetaFile{post.Tim, post.Md5, 0}
 			output = append(output, fileToPrepare)
 		}
