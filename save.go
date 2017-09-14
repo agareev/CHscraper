@@ -30,7 +30,25 @@ func (f *MetaFile) saveFile() {
 	}
 	file.Close()
 
-	log.Println(f.bildurl(), f.buildthumb(), " downloaded!")
+	// TODO download thumb fixme please
+	response, e = http.Get(f.buildthumb())
+	if e != nil {
+		log.Fatal(e)
+	}
+
+	defer response.Body.Close()
+	file, err = os.Create(f.buildpathThumb())
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	_, err = io.Copy(file, response.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+	file.Close()
+
+	log.Println(f.bildurl(), " downloaded!")
 	return
 
 }
@@ -97,7 +115,8 @@ func (f *MetaFile) saveMeta() {
 
 func (f *MetaFile) buildpath() string {
 	t := time.Now().Format("2006-01-02")
-	createFolder()
+	relativePath := "files/"
+	createFolder(relativePath)
 	path, err := filepath.Abs("files/" + t + "/" + strconv.Itoa(f.Name) + ".webm")
 	if err != nil {
 		log.Fatalln(err)
@@ -105,9 +124,20 @@ func (f *MetaFile) buildpath() string {
 	return path
 }
 
-func createFolder() {
+func (f *MetaFile) buildpathThumb() string {
 	t := time.Now().Format("2006-01-02")
-	path, err := filepath.Abs("files/" + t + "/")
+	relativePath := "thumb/"
+	createFolder(relativePath)
+	path, err := filepath.Abs(relativePath + t + "/" + strconv.Itoa(f.Name) + ".jpg")
+	if err != nil {
+		log.Fatalln(err)
+	}
+	return path
+}
+
+func createFolder(relativePath string) {
+	t := time.Now().Format("2006-01-02")
+	path, err := filepath.Abs(relativePath + t + "/")
 	if err != nil {
 		log.Fatal(err)
 	}
