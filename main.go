@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"flag"
 	"log"
+	"github.com/robfig/cron"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -32,9 +33,7 @@ func init() {
 	}
 }
 
-func main() {
-	log.Println(datasource)
-
+func download() {
 	for _, threadNUM := range getThreadNumbers() {
 		Dthreadurl := buildThreadURL(threadNUM)
 		for _, i := range getPosts(Dthreadurl) {
@@ -44,5 +43,16 @@ func main() {
 			}
 		}
 	}
+}
+
+func main() {
+	log.Println(datasource)
+
+	c := cron.New()
+	c.AddFunc("@every 3h", func() {
+		download()
+	})
+	c.Start()
+	select {}
 	defer DB.Close()
 }
